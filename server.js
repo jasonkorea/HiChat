@@ -3,18 +3,32 @@ var express = require('express'),
     app = express(),
     http = require('http').createServer(app),
     io = require('socket.io')(http),
-    users = [];
+    cors = require('cors'),
+    users = [],
+    figlet = require('figlet');
+
 //specify the html we will use
+app.use(cors())
 app.use('/', express.static(__dirname + '/www'));
 //bind the server to the 80 port
 //server.listen(3000);//for local test
-http.listen(process.env.PORT || 8080);//publish to heroku
+const port = process.env.PORT || 8080;
+http.listen(port, () => {
+    figlet(`Server started on port ${port}`, function (err, data) {
+        if (err) {
+            console.log('Something went wrong...');
+            console.dir(err);
+            return;
+        }
+        console.log(data)
+    });
+});//publish to heroku
 //server.listen(process.env.OPENSHIFT_NODEJS_PORT || 3000);//publish to openshift
 //console.log('server started on port'+process.env.PORT || 3000);
 //handle the socket
-io.sockets.on('connection', function(socket) {
+io.sockets.on('connection', function (socket) {
     //new user login
-    socket.on('login', function(nickname) {
+    socket.on('login', function (nickname) {
         if (users.indexOf(nickname) > -1) {
             socket.emit('nickExisted');
         } else {
@@ -26,7 +40,7 @@ io.sockets.on('connection', function(socket) {
         };
     });
     //user leaves
-    socket.on('disconnect', function() {
+    socket.on('disconnect', function () {
         if (socket.nickname != null) {
             //users.splice(socket.userIndex, 1);
             users.splice(users.indexOf(socket.nickname), 1);
@@ -34,11 +48,15 @@ io.sockets.on('connection', function(socket) {
         }
     });
     //new message get
-    socket.on('postMsg', function(msg, color) {
+    socket.on('postMsg', function (msg, color) {
         socket.broadcast.emit('newMsg', socket.nickname, msg, color);
     });
     //new image get
-    socket.on('img', function(imgData, color) {
+    socket.on('img', function (imgData, color) {
         socket.broadcast.emit('newImg', socket.nickname, imgData, color);
+    });
+
+    socket.on('location', function (data, color) {
+        socket.broadcast.emit('location', data);
     });
 });

@@ -1,15 +1,14 @@
-html, body {
+html,
+body {
     margin: 0;
+    width: 100%;
+    height:100%;
     background-color: #efefef;
     font-family: sans-serif;
+    overflow: hidden;
+    position:fixed;
 }
-.wrapper {
-    width: 500px;
-    height: 640px;
-    padding: 5px;
-    margin: 0 auto;
-    background-color: #ddd;
-}
+
 #loginWrapper {
     position: fixed;
     top: 0;
@@ -22,47 +21,58 @@ html, body {
     display: block;
     padding-top: 200px;
 }
+
 #nickWrapper {
     display: none;
 }
+
 .banner {
-    height: 80px;
+    height: 20px;
     width: 100%;
 }
+
 .banner p {
     float: left;
     display: inline-block;
 }
+
 .controls {
     height: 100px;
     margin: 5px 0px;
     position: relative;
 }
+
 #historyMsg {
-    height: 400px;
+    height: 200px;
     background-color: #fff;
     overflow: auto;
     padding: 2px;
 }
+
 #historyMsg img {
-    max-width: 99%;
+    width: 100%;
 }
+
 .timespan {
     color: #ddd;
 }
+
 .items {
     height: 30px;
 }
+
 #colorStyle {
     width: 50px;
     border: none;
     padding: 0;
 }
+
 /*custom the file input*/
 
 .imageLable {
     position: relative;
 }
+
 #sendImage {
     position: absolute;
     width: 52px;
@@ -70,20 +80,23 @@ html, body {
     opacity: 0;
     overflow: hidden;
 }
+
 /*end custom file input*/
 
 #messageInput {
-    width: 440px;
-    max-width: 440px;
-    height: 90px;
+    width: 75%;
+    height: 50px;
     max-height: 90px;
-    float:left;
+    float: left;
 }
+
 #sendBtn {
-    width: 50px;
-    height: 96px;
+    width: 15%;
+    height: 50px;
+    margin-right: 6dp;
     float: right;
 }
+
 #emojiWrapper {
     display: none;
     width: 500px;
@@ -92,18 +105,42 @@ html, body {
     background-color: #aaa;
     box-shadow: 0 0 10px #555;
 }
+
 #emojiWrapper img {
     margin: 2px;
     padding: 2px;
     width: 25px;
     height: 25px;
 }
+
 #emojiWrapper img:hover {
     background-color: blue;
 }
-.emoji{
+
+.emoji {
     display: inline;
 }
+
 footer {
     text-align: center;
+}
+
+#map {
+    width: 100%;
+    height: 60%;
+    /* The width is the width of the web page */
+}
+
+#parent {
+    width:100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.wrapper {
+    width: 100%;
+    height: 40%;
+    background-color: #ddd;
 }
