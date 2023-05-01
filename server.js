@@ -7,14 +7,24 @@ var express = require('express'),
     users = [],
     figlet = require('figlet');
 
+const expressSanitizer = require("express-sanitizer");
+const https = require("https");
+const fs = require("fs");
+//io = require('socket.io')(https);
+
+
 //specify the html we will use
 app.use(cors())
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(expressSanitizer());
 app.use('/', express.static(__dirname + '/www'));
 //bind the server to the 80 port
 //server.listen(3000);//for local test
-const port = process.env.PORT || 8080;
-http.listen(port, () => {
-    figlet(`Server started on port ${port}`, function (err, data) {
+const port_http = process.env.PORT || 8080;
+
+http.listen(port_http, () => {
+    figlet(`HTTP Server started on port ${port_http}`, function (err, data) {
         if (err) {
             console.log('Something went wrong...');
             console.dir(err);
@@ -22,7 +32,36 @@ http.listen(port, () => {
         }
         console.log(data)
     });
-});//publish to heroku
+});
+
+const options = {
+    key: fs.readFileSync("./config/cert.key"),
+    cert: fs.readFileSync("./config/cert.crt"),
+};
+
+const port_https = 8443;
+https.createServer(options, app).listen(port_https, () => {
+    figlet(`HTTPS Server started on port ${port_https}`, function (err, data) {
+        if (err) {
+            console.log('Something went wrong...');
+            console.dir(err);
+            return;
+        }
+        console.log(data)
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
 //server.listen(process.env.OPENSHIFT_NODEJS_PORT || 3000);//publish to openshift
 //console.log('server started on port'+process.env.PORT || 3000);
 //handle the socket
@@ -56,7 +95,7 @@ io.sockets.on('connection', function (socket) {
         socket.broadcast.emit('newImg', socket.nickname, imgData, color);
     });
 
-    socket.on('location', function (data, color) {
-        socket.broadcast.emit('location', data);
+    socket.on('location', function (data) {
+        socket.broadcast.emit('location', socket.nickname, data);
     });
 });

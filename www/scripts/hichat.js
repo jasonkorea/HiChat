@@ -47,14 +47,16 @@ HiChat.prototype = {
         this.socket.on('newImg', function (user, img, color) {
             that._displayImage(user, img, color);
         });
-        this.socket.on('location', function (latLng) {
+        this.socket.on('location', function (user, latLng) {
             console.log(latLng)
             console.log(map)
+            console.log(user)
             const marker = new google.maps.Marker({
                 position: latLng,
                 map: map,
             })
             map.panTo(marker.position);
+            that._displayNewPosition(user, latLng);
         });
 
         document.getElementById('loginBtn').addEventListener('click', function () {
@@ -206,5 +208,15 @@ HiChat.prototype = {
             };
         };
         return result;
+    },
+    _displayNewPosition: function (user, latLng) {
+        var container = document.getElementById('historyMsg'),
+            msgToDisplay = document.createElement('p'),
+            date = new Date().toTimeString().substr(0, 8),
+            //determine whether the msg contains emoji
+            msg = this._showEmoji(msg);
+        msgToDisplay.innerHTML = user + '<span class="timespan">(' + date + '): </span>' + latLng.lat + ' ' + latLng.lng;
+        container.appendChild(msgToDisplay);
+        container.scrollTop = container.scrollHeight;
     }
 };
